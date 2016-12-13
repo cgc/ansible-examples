@@ -4,7 +4,7 @@
 
   tasks:
     - ec2_ami:
-        region: us-east-1
+        region: us-west-2
         instance_id: "{{ instance_id }}"
         wait: no
         name: tensorflow_ami

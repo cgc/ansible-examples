@@ -2,8 +2,8 @@
   connection: local
 
   vars:
-    region: us-east-1
-    az: us-east-1d
+    region: us-west-2
+    az: us-west-2c
     #tf_subnet_id: Subnet IF goes here
     #tf_sg_id: Security Group ID goes here
     #tf_vol_id: Volume ID for persistent /data mount
@@ -18,7 +18,7 @@
          region: "{{ region }}"
          group_id: "{{ tf_sg_id }}"
          instance_type: g2.2xlarge	
-         image: ami-d05e75b8
+         image: ami-5189a661
          wait: true
          exact_count: 1
          count_tag:
