@@ -1,0 +1,42 @@
+- hosts: tensorflow_ssh
+  remote_user: ubuntu
+  become: true
+
+  tasks:
+    - name: upgrade pip
+      shell: pip install --upgrade pip
+
+    - name: install multiverse
+      apt_repository:
+        repo: "{{item}}"
+        update_cache: false
+      register: multiverse_installed
+      with_items:
+        - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+        - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+        - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+        - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+    - name: update apt cache for multiverse
+      apt:
+        update_cache: true
+      when: multiverse_installed | changed
+
+    - name: install basic packages
+      action: >
+        {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
+      with_items:
+        - git
+        - python-tk
+        - nvidia-cuda-toolkit
+
+    - name: checkout code
+      become: false
+      git:
+        repo: https://github.com/cgc/rnd.git
+        dest: /data/rnd
+        accept_hostkey: yes
+    - name: install requirements
+      pip:
+        requirements: /data/rnd/tf-nonlinearity/requirements.txt
+    - name: install newer tensorflow
+      pip: name=https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.11.0-cp27-none-linux_x86_64.whl state=present

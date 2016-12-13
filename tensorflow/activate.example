@@ -1,0 +1,6 @@
+DIR=$(cd $(dirname $0) ; pwd -P)
+export ANSIBLE_HOSTS=$DIR/ec2.py
+export EC2_INI_PATH=$DIR/ec2.ini
+export set AWS_ACCESS_KEY_ID=***CHANGEME***
+export set AWS_SECRET_ACCESS_KEY=***CHANGEME***
+
